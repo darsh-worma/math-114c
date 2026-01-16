@@ -1,0 +1,250 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass \: \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\newcommand{\Fr}{\text{Fr}}
+\newcommand{\Char}{\text{Char}}
+
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework 1}
+\newcommand{\hmwkDueDate}{January 15, 2025}
+\newcommand{\hmwkClass}{Math 114C}
+\newcommand{\hmwkClassInstructor}{Professor Arant}
+\newcommand{\hmwkAuthorName}{\textbf{Darsh Verma}}
+\newcommand{\raw}{\rightarrow}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 11:59pm}\\
+    \vspace{0.1in}\large{\hmwkClassInstructor}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solution}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+\begin{homeworkProblem} % problem 1
+    \textbf{Part (a)} \\
+    
+    \begin{center}
+    \begin{tabular}{c c c c}
+        \hline
+        $\text{Char}_R(x)$ & $\text{Char}_Q(x)$ & $\text{Char}_{R \& Q}(x)$ & $\text{Char}_R(x) \cdot \text{Char}_Q(x)$ \\
+        \hline
+        1 & 1 & 1 & $1 \cdot 1 = \mathbf{1}$ \\
+        1 & 0 & 0 & $1 \cdot 0 = \mathbf{0}$ \\
+        0 & 1 & 0 & $0 \cdot 1 = \mathbf{0}$ \\
+        0 & 0 & 0 & $0 \cdot 0 = \mathbf{0}$ \\
+        \hline
+    \end{tabular}
+    \end{center}
+    
+    \textbf{Part (b)} \\
+    \begin{center}
+        \begin{tabular}{c c c c}
+            \hline
+            $\text{Char}_R(x)$ & $\text{Char}_Q(x)$ & $\text{Char}_{R \vee Q}(x)$ & $\min(1, \text{Char}_R(x) + \text{Char}_Q(x))$ \\
+            \hline
+            1 & 1 & 1 & $\min(1, 2) = 1$ \\
+            1 & 0 & 1 & $\min(1, 1) = 1$ \\
+            0 & 1 & 1 & $\min(1, 1) = 1$ \\
+            0 & 0 & 0 & $\min(1, 0) = 0$ \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{homeworkProblem}
+\newpage
+\begin{homeworkProblem}
+    \textbf{Part (a)}
+    \begin{proof}
+        First, we prove the forward direction. Assume $A=B$ for subsets $A, B \subseteq \N$. By definition of set equality, $x \in A \iff x \in B$. If $x \in A$, then $x \in B$, and thus $\Char_A(x) = 1$ and $\Char_B(x) = 1$. Similarly, if $x \notin A$, then $x \notin B$, and thus $\Char_A(x) = 0$ and $\Char_B(x) = 0$. \\
+        Now, we prove the backward direction. Assume $\Char_A = \Char_B$. We have $x \in A \iff \Char_A(x) = 1 \iff \Char_B(x) = 1 \iff x \in B$ and thus, $A=B$.
+    \end{proof}
+    \textbf{Part (b)} 
+    \begin{proof}
+        First, we prove existence. Let $f : \N \raw \{0, 1\}$ be a total function. Let's construct $A$ as follows:
+        $$A = \{n \in \N \mid \text{if $f(n) = 1$}\}$$
+        By definition, $f = \Char_A$. \\
+        Now, we prove uniqueness. Assume for the sake of contradiction that there exists two distinct sets $A$ and $B$ with this property. Then, we have function $f = \Char_A = \Char_B$. By part (a), we have $A = B$, which is a contradiction!
+    \end{proof}
+    
+\end{homeworkProblem}
+\newpage
+\begin{homeworkProblem} % problem 3
+    \textbf{Part (a)} \\
+    $f \circ g$ is also the unique unary partial function with empty domain. If $g$ has an empty domain, then $f \circ g$ must also have an empty domain.\\ \\
+    \textbf{Part (b)} \\
+    $$(f \circ g)(x) = \begin{cases}
+        1 & \text{if $x \geq 10$ and $x$ is even} \\
+        \uparrow & \text{otherwise}
+    \end{cases}$$
+    Applying $g$ yields outputs greater than 20 for inputs greater than 10. \\ \\
+    \textbf{Part (c)} \\
+    $$(f \circ g)(x) = \begin{cases}
+        1 & \text{if $x$ is a multiple of 15} \\
+        \uparrow & \text{otherwise}
+    \end{cases}$$
+\end{homeworkProblem}
+\newpage
+\begin{homeworkProblem} % problem 4
+    $$g(x) = 0$$
+    $$h(x, t, y) = t + x$$
+    \begin{proof}
+        We proceed with mathematical induction on $y$. Our base case is when $y = 0$. We get $ M(x, 0) = g(0) = 0$ which is true. Now, we assume $M(x, y) = xy$, and want to show that $M(x, y + 1) = x(y + 1) = xy + x$. By our definition, we have:
+        $$M(x, y + 1) = h(x, M(x, y), y) = x + M(x, y) = x + xy = x(y + 1)$$.
+    \end{proof}
+\end{homeworkProblem}
+\newpage
+\begin{homeworkProblem}
+    $$F(x, y) = g(x)$$
+    $$F(x, y + 1) = h(x, F(x, y), y)$$ where
+    $$g(x) = x$$
+    $$h(x, t, y) = f(t)$$
+    We have $F(x, y) \downarrow \iff F(x, z)\downarrow \forall z < y$.
+\end{homeworkProblem}
+\newpage
+\begin{homeworkProblem}
+    $f(1) = \mu y[g(1, y) = 0] = \uparrow$. No number bigger than 1 also divides 1. \\
+    $f(4) = \mu y[g(4, y) = 0] = 2$. 2 is the smallest non-one factor of 4. \\
+    $f(7) = \mu y[g(1, y) = 0] = \uparrow$. 7 is prime. \\
+    $f(15) = \mu y[g(1, y) = 0] = 3$. 3 is the smallest non-one factor of 15.
+\end{homeworkProblem}
+\newpage
+\begin{homeworkProblem}
+    $$f(x, y) = \begin{cases}
+        0 & \text{if $y^2 \geq x$} \\
+        1 & \text{if $y^2 < x$}
+    \end{cases}$$
+    $$g(x) = \mu y [f(x, y) = 0]$$
+    If $x$ is not a perfect square, $g$ returns $\lceil \sqrt{x} \rceil$. This function is recursive by definition by minimization. Squaring a natural number (definition by primitive recursion of multiplication)  and the $\geq$ and $<$ relations (defintion by primitve recursion) are recursive.
+\end{homeworkProblem}
+\newpage
+\begin{homeworkProblem}
+    $h$ is recrusive by definition by primitive recursion. We have our base case of $h(\vec{x}, 0) = g(\vec{x})$, where $g(\vec{x}) = 1$. We also have $h(\vec{x}, y + 1) = \alpha (\vec{x}, h(\vec{x}, y), y)$, where $\alpha (\vec{x}, t, y) = t \cdot f(\vec{x}, y)$. The function $\alpha$ is recrusive because $f$ is recursive and multiplication is recursive by defnition by primitive recursion.
+\end{homeworkProblem}
+\end{document}
