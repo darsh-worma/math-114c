@@ -174,4 +174,49 @@ On the other hand, ``no'' is not easy to show. For example, you can be thinking 
     $$ R := \{(x, y) \in \N^2 : x \text{ divides } y\}$$
     $R(4, 8)$ holds but $R(8, 4)$ doesn't hold.
 \end{example}
+\newpage
+
+\section{Lecture 2: Jan 7}
+\subsection{Partial Functions}
+\begin{definition}[Partial Function]
+  Let $X, Y$ be sets. A \textbf{partial function} $f : X \rightarrow Y$ is a function $f$ whose domain $D$ is a subset $D \subseteq X$ and whose codomain is $Y$.
+\end{definition}
+Some other notation \\
+$f(x) \downarrow \implies x$ is in the domain of $f$ \\
+$f(x) \uparrow \implies x$ is not in the domain of $f$
+
+\begin{example}
+  $f(x,y) = \dfrac{x}{y}$ is a partial function $f : \R^2 \rightarrow \R$.
+  $f(x, y) \downarrow \iff y \neq 0$
+\end{example}
+\begin{example}
+  $f(x) = \sum_{n=0}^\infty x^n$ is partial function $f : \R \rightarrow \R$. $f(x) \downarrow \iff |x| < 1$
+\end{example}
+In this course, we will almost exclusively be concerned with $n$-ary partial functions on $\N$, $f : \N^n \rightarrow \N$
+
+\begin{definition}[Total Function]
+ When $f(\vec{x}) \downarrow \forall \vec{x} \in \N^n$, we say $f$ is a \textbf{total function}. According to our definition, total functions are a special type of partial function. Specifically, when we say "let $f$ be a partial function", we are not ruling out that $f$ is total.
+ 
+\end{definition}
+When are two partial functions equal? Same notion as regular functions.
+
+Definition schemes for partial functions
+3 important ones:
+\begin{itemize}
+  \item definition by substitution
+  \item defintion by minimization
+  \item definition by primitive recursion
+\end{itemize}
+\subsection{Defintion by Substitution}
+Roughly speaking, when $f(\vec{x}) = h(g_0(\vec{x}), \dots, g_{k-1}(\vec{x}))$ we say $f$ is defined via substitution from $h, g_0 , \dots, g_{k-1}$. 
+
+\begin{example}
+  Let $h(x_0, x_1, x_2)$ be 3-ary. Define $f(x_0, x_1) := h(x_1, x_0, x_1)$. There is a substitution definition using $h$ with \textbf{projection functions}
+\end{example}
+
+\newpage
+\section{Lecture 3: Jan 9}
+if $f(y) = y!$ and we define $m_0=1$, $h(t, y) = t \cdot (y + 1)$, then \\
+$$$$
+
 \end{document}

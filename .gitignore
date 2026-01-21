@@ -1,9 +1,9 @@
 # LaTeX auxiliary files
-main.aux
-main.fdb_latexmk
-main.fls
-main.loe
-main.log
-main.out
-main.synctex.gz
-main.toc
+*.aux
+*.fdb_latexmk
+*.fls
+*.loe
+*.log
+*.out
+*.synctex.gz
+*.toc
