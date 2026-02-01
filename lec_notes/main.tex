@@ -1,0 +1,331 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+% Geometry settings
+\geometry{margin=1in}
+
+% Theorem and Definition environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+
+% Custom commands for computability theory
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\seq}[1]{\langle #1 \rangle}
+\newcommand{\code}[1]{\ulcorner #1 \urcorner}
+\newcommand{\diverge}{\uparrow}
+\newcommand{\converge}{\downarrow}
+\newcommand{\Char}{\text{Char}}
+
+\title{Math 114C: Computability Theory \\ Lecture Notes 1--10}
+\author{Based on Course Materials}
+\date{}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section*{Lecture 1: Introduction}
+
+\subsection*{Decidability and Algorithms}
+Given two integers $n, m$, can we compute their greatest common divisor? Yes, the Euclidean algorithm solves this. Given a positive integer $n$, can we decide whether $n$ is prime? Yes, by checking if any $k < n$ divides $n$.
+
+\textbf{Big Question:} What precisely do we mean when we say we can "compute" a function or "decide" a problem? We mean we have an \textit{algorithm} (an effective procedure).
+
+\subsection*{Characteristics of an Algorithm}
+Some characteristics we look for in an algorithm:
+\begin{enumerate}
+    \item Finite list of instructions.
+    \item Procedure is deterministic (what to do next is always clear).
+    \item No intuition required by the user (never vague).
+    \item May use "scratch work" (memory).
+    \item When it gives an answer, the procedure terminates after a finite number of steps.
+\end{enumerate}
+
+In a modern context, we could summarize by saying: "Can be implemented by a computer". However, to prove that a function is \textit{not} computable, we need a formal mathematical definition.
+
+\subsection*{Hilbert's 10th Problem}
+Is there an algorithm which, given a Diophantine equation (multivariable polynomial equation with integer coefficients, e.g., $x^2 + y^2 = z^2$), determines whether or not the equation has an integer solution?
+\begin{itemize}
+    \item \textbf{Answer:} No. The Diophantine integer solution problem is undecidable.
+\end{itemize}
+
+\subsection*{Mathematical Preliminaries}
+\begin{itemize}
+    \item The set of natural numbers is $\N := \{0, 1, 2, 3, \dots\}$.
+    \item For a natural number $n > 0$, $\N^n := \{(x_0, \dots, x_{n-1}) : x_i \in \N\}$ is the set of $n$-tuples of $\N$. We index starting at 0.
+\end{itemize}
+
+\subsubsection*{Relations}
+Let $n > 0$ be an integer. An $n$-ary relation is a subset $R \subseteq \N^n$.
+Notation: For $\vec{x} = (x_0, \dots, x_{n-1}) \in \N^n$:
+\begin{itemize}
+    \item $R(\vec{x}) \iff \vec{x} \in R$ ("R holds at $\vec{x}$").
+    \item $\neg R(\vec{x}) \iff \vec{x} \notin R$.
+\end{itemize}
+
+\begin{example}
+Divisibility is a binary relation on $\N$:
+$$R(x, y) \iff x \text{ divides } y \iff (\exists k \in \N)(y = k \cdot x)$$
+So $R(2,4)$ holds, but $\neg R(4,2)$.
+\end{example}
+
+---
+
+\section*{Lecture 2: Partial Functions}
+
+\subsection*{Definitions}
+Algorithms can hang on inputs (run forever). In computability theory, we deal with \textbf{partial functions}.
+\begin{definition}
+Let $X, Y$ be sets. A partial function $f$ from $X$ to $Y$ is a function whose domain $D$ is a subset $D \subseteq X$ (maybe $D=X$, maybe $D=\emptyset$) and whose codomain is $Y$.
+\end{definition}
+Notation:
+\begin{itemize}
+    \item $f: X \rightharpoonup Y$ means $f$ is a partial function.
+    \item $f(x)\converge$: $f(x)$ converges ($x$ is in the domain).
+    \item $f(x)\diverge$: $f(x)$ diverges ($x$ is not in the domain).
+\end{itemize}
+
+We are concerned with $n$-ary partial functions on $\N$, $f: \N^n \rightharpoonup \N$. If $f(\vec{x})\converge$ for every $\vec{x} \in \N^n$, $f$ is a \textbf{total function}.
+
+\subsection*{Definition Schemes}
+Three important schemes for defining partial functions:
+1. Definition by Substitution.
+2. Definition by Minimization.
+3. Definition by Primitive Recursion.
+
+\subsubsection*{1. Definition by Substitution}
+$f(\vec{x}) = h(g_0(\vec{x}), \dots, g_{k-1}(\vec{x}))$.
+Here $h$ is $k$-ary and $g_i$ are $n$-ary.
+Specifically for partial functions:
+$$f(\vec{x}) = y \iff (\exists y_0, \dots, y_{k-1})[g_0(\vec{x})=y_0 \land \dots \land g_{k-1}(\vec{x})=y_{k-1} \land h(y_0, \dots, y_{k-1})=y]$$
+If any inner function diverges, the composition diverges.
+
+\subsubsection*{2. Definition by Minimization}
+Let $g$ be a partial function. The partial function $f$ defined via minimization from $g$ is written:
+$$f(\vec{x}) = \mu y [g(\vec{x}, y) = 0]$$
+This means $f(\vec{x}) = y$ iff:
+1. $g(\vec{x}, y) = 0$.
+2. For all $i < y$, $g(\vec{x}, i)\converge$ and $g(\vec{x}, i) \neq 0$.
+
+\begin{remark}
+Computational intuition: We compute $g(\vec{x}, 0), g(\vec{x}, 1), \dots$ one by one. If we find a 0, we output the index. If any computation $g(\vec{x}, i)$ hangs, we get stuck and never return an output.
+\end{remark}
+
+---
+
+\section*{Lecture 3: Primitive Recursion}
+
+\subsection*{Examples and Definition}
+\begin{example}
+Factorial: $0! = 1$, $(y+1)! = y! \cdot (y+1)$.
+Addition: $x+0=x$, $x+(y+1) = (x+y)+1$.
+\end{example}
+
+\begin{definition}[Primitive Recursion]
+Let $g: \N^n \rightharpoonup \N$ and $h: \N^{n+2} \rightharpoonup \N$ be partial. $f: \N^{n+1} \rightharpoonup \N$ is defined by primitive recursion from $g$ and $h$ if:
+\begin{align*}
+    f(\vec{x}, 0) &= g(\vec{x}) \\
+    f(\vec{x}, y+1) &= h(\vec{x}, f(\vec{x}, y), y)
+\end{align*}
+The domain implies that if $f(\vec{x}, y)\diverge$, then $f(\vec{x}, y+1)\diverge$.
+\end{definition}
+
+\subsection*{Recursively Closed Classes}
+A class $\mathcal{C}$ of partial functions on $\N$ is \textbf{recursively closed} if it satisfies:
+\begin{enumerate}
+    \item $\mathcal{C}$ contains the Successor ($S(x)=x+1$), Zero, and Projection ($\Pi^n_i(\vec{x}) = x_i$) functions.
+    \item $\mathcal{C}$ is closed under substitution.
+    \item $\mathcal{C}$ is closed under primitive recursion.
+    \item $\mathcal{C}$ is closed under minimization.
+\end{enumerate}
+
+\begin{definition}[Recursive Function]
+A partial function $f$ is \textbf{recursive} if it is a member of every recursively closed class of partial functions. [cite_start]The class of recursive functions $\mathcal{R}$ is the smallest recursively closed class [cite: 351-358].
+\end{definition}
+
+---
+
+\section*{Lecture 4: More Recursive Partial Functions}
+
+\subsection*{Basic Recursive Functions}
+The following are recursive total functions:
+\begin{enumerate}
+    \item Predecessor: $\text{Pred}(x) = x-1$ if $x>0$, else 0.
+    \item Addition: $+: \N^2 \to \N$.
+    \item Multiplication: $\cdot : \N^2 \to \N$.
+    \item Exponentiation: $x^y$.
+\end{enumerate}
+\textit{Proof idea:} Defined via primitive recursion.
+
+\subsection*{Advanced Arithmetic}
+\begin{itemize}
+    \item \textbf{Truncated Subtraction} ($x \dot{-} y$): equal to $x-y$ if $x \ge y$, else 0.
+    $$x \dot{-} 0 = x, \quad x \dot{-} (y+1) = \text{Pred}(x \dot{-} y)$$
+    \item \textbf{Division by 2}: $f(x) = \mu y [x \dot{-} 2y = 0]$. This is recursive.
+    \item \textbf{Absolute Difference}: $|x-y| = (x \dot{-} y) + (y \dot{-} x)$.
+    \item \textbf{Max/Min}: $\max(x, y) = \frac{x + y + |x-y|}{2}$ (requires division by 2 handling or logical equivalent).
+    \item \textbf{Bounded Summation}: $g(\vec{x}, y) = \sum_{i=0}^y f(\vec{x}, i)$. If $f$ is recursive, $g$ is recursive via primitive recursion.
+\end{itemize}
+
+\subsection*{Recursive Relations}
+\begin{definition}
+An $n$-ary relation $R \subseteq \N^n$ is \textbf{recursive} if its characteristic function $\text{Char}_R$ is a recursive total function:
+$$\text{Char}_R(\vec{x}) = \begin{cases} 1 & \text{if } R(\vec{x}) \\ 0 & \text{if } \neg R(\vec{x}) \end{cases}$$
+\end{definition}
+Examples: $x=0$, $x < y$ are recursive relations.
+
+---
+
+\section*{Lecture 5: Properties of Recursive Relations}
+
+\subsection*{Closure Properties}
+\begin{theorem}
+Recursive relations are closed under recursive total substitution. If $R$ is recursive and $f_i$ are recursive total functions, then $Q(\vec{x}) \iff R(f_0(\vec{x}), \dots)$ is recursive.
+\end{theorem}
+\textit{Note:} Not necessarily closed under partial substitution yet.
+
+\begin{theorem}
+Let $R, Q$ be recursive. Then $\neg R$, $R \land Q$, $R \lor Q$ are recursive.
+Proof: Use arithmetic on characteristic functions, e.g., $\text{Char}_{\neg R} = 1 \dot{-} \text{Char}_R$.
+\end{theorem}
+
+\begin{theorem}[Bounded Quantification]
+If $R(\vec{x}, y)$ is recursive, then so are:
+\begin{itemize}
+    \item $P(\vec{x}, y) \iff (\forall i \le y) R(\vec{x}, i)$
+    \item $Q(\vec{x}, y) \iff (\exists i \le y) R(\vec{x}, i)$.
+\end{itemize}
+\end{theorem}
+
+\subsection*{Definition by Cases}
+If $R$ is recursive and $f, g$ are recursive total functions, then $h(\vec{x}) = f(\vec{x})$ if $R(\vec{x})$ else $g(\vec{x})$ is recursive.
+
+\subsection*{Graphs of Partial Functions}
+The graph of $f$ is $G_f(\vec{x}, y) \iff f(\vec{x}) = y$.
+\begin{theorem}
+If $f$ is a total function, $f$ is recursive iff $G_f$ is recursive.
+\end{theorem}
+
+---
+
+\section*{Lecture 6: Sequence Coding}
+
+We need to code finite sequences of numbers $(x_0, \dots, x_{n-1})$ into single natural numbers $\N$.
+Let $p_0, p_1, \dots$ be the prime numbers ($2, 3, 5, \dots$). The function $n \mapsto p_n$ is recursive.
+
+\subsection*{The Coding}
+\begin{definition}
+The code of the sequence $(x_0, \dots, x_{n-1})$ is:
+$$\seq{x_0, \dots, x_{n-1}} = p_0^{x_0+1} \cdot p_1^{x_1+1} \cdots p_{n-1}^{x_{n-1}+1}$$
+The empty sequence is coded as $\seq{\emptyset} = 1$.
+\end{definition}
+Example: $\seq{2, 1, 0} = 2^{2+1} \cdot 3^{1+1} \cdot 5^{0+1} = 2^3 \cdot 3^2 \cdot 5^1 = 360$.
+
+\subsection*{Sequence Predicate}
+The relation $Seq(u) \iff u$ is a sequence code, is recursive.
+$Seq(u) \iff (\forall x \le u)(\forall y \le u) [(Prime(x) \land Prime(y) \land x < y \land y \mid u) \implies x \mid u]$.
+
+---
+
+\section*{Lecture 7: Sequence Operations}
+
+\subsection*{Recursive Functions on Sequences}
+The following are recursive total functions:
+\begin{enumerate}
+    \item \textbf{Length} $lh(u)$: The length of the sequence coded by $u$.
+    \item \textbf{Decoding} $(u)_i$: The $i$-th coordinate of the sequence. If $i \ge lh(u)$, return 0.
+    \item \textbf{Truncation} $u \upharpoonright i$: Returns code of first $i$ elements.
+    \item \textbf{Concatenation} $u * v$: Returns code of sequence $u$ followed by $v$.
+\end{enumerate}
+
+\subsection*{Course-of-Values Recursion}
+Idea: To compute $f(\vec{x}, y+1)$, use all previous values $f(\vec{x}, 0), \dots, f(\vec{x}, y)$.
+\begin{theorem}
+If $f$ is defined by $f(\vec{x}, y+1) = h(\vec{x}, \seq{f(\vec{x}, 0), \dots, f(\vec{x}, y)}, y)$, then $f$ is recursive.
+\end{theorem}
+Example: Fibonacci sequence is recursive.
+
+---
+
+\section*{Lecture 8: The Unlimited Register Machine (URM)}
+
+\subsection*{Components}
+\begin{itemize}
+    \item \textbf{Registers:} $R_0, R_1, R_2, \dots$ containing natural numbers $r_0, r_1, \dots$.
+    \item \textbf{Program:} A finite list of instructions $I_0, I_1, \dots, I_k$.
+\end{itemize}
+
+\subsection*{Instructions}
+\begin{enumerate}
+    \item \textbf{Zero} $Z(n)$: Replace $r_n$ with 0.
+    \item \textbf{Successor} $S(n)$: Replace $r_n$ with $r_n + 1$.
+    \item \textbf{Transfer} $T(m, n)$: Replace $r_n$ with $r_m$.
+    \item \textbf{Jump} $J(m, n, q)$: If $r_m = r_n$, go to instruction $I_q$; else go to next instruction.
+\end{enumerate}
+
+\subsection*{Computability}
+A program \textbf{halts} if it tries to execute an instruction that does not exist.
+A function $f: \N^n \rightharpoonup \N$ is \textbf{URM-computable} if there is a program $P$ such that for input $\vec{x}$ in registers $R_1, \dots, R_n$ (and 0 elsewhere), the machine halts with $f(\vec{x})$ in $R_0$.
+
+\begin{theorem}
+$\mathcal{R} = \mathcal{U}$. The class of recursive functions is exactly the class of URM-computable functions.
+\end{theorem}
+Direction $\mathcal{R} \subseteq \mathcal{U}$: Show URM can simulate basic recursive functions and closure properties (tedious programming).
+
+---
+
+\section*{Lecture 9: Arithmetization of URM}
+
+To show $\mathcal{U} \subseteq \mathcal{R}$, we "arithmetize" the machine. We assign numbers to instructions, programs, and machine states.
+
+\subsection*{Coding Instructions}
+\begin{itemize}
+    \item $\#Z(n) = \seq{0, n}$
+    \item $\#S(n) = \seq{1, n}$
+    \item $\#T(m, n) = \seq{2, m, n}$
+    \item $\#J(m, n, q) = \seq{3, m, n, q}$.
+\end{itemize}
+A program $P$ is coded as $\#P = \seq{\#I_0, \dots, \#I_{k-1}}$.
+
+\subsection*{Kleene T-Predicate}
+We define a predicate $T_n(e, \vec{x}, y)$ meaning:
+"e is a program code, $\vec{x}$ is input, and $y$ codes a halting computation of program $e$ on $\vec{x}$".
+The computation code $y$ is a sequence of codes of machine states.
+
+\begin{theorem}
+For any $n > 0$, $T_n(e, \vec{x}, y)$ is a recursive relation.
+\end{theorem}
+
+\subsection*{Result}
+Any URM-computable function $g$ can be written as:
+$$g(\vec{x}) = U(\mu y [T_n(e, \vec{x}, y)])$$
+Where $U(y)$ extracts the output from the final state in the computation sequence $y$. Since $T_n$ is recursive and minimization is recursive, $g$ is recursive. Thus $\mathcal{U} \subseteq \mathcal{R}$.
+
+---
+
+\section*{Lecture 10: Effective Enumerations}
+
+\subsection*{Universal Function}
+Based on the Kleene T-predicate, we can enumerate all computable functions.
+Let $\phi_e^{(n)}(\vec{x}) = U(\mu y [T_n(e, \vec{x}, y)])$.
+The sequence $\phi_0^{(n)}, \phi_1^{(n)}, \dots$ contains all $n$-ary computable partial functions.
+The universal function $\Psi_U^{(n)}(e, \vec{x}) = \phi_e^{(n)}(\vec{x})$ is computable.
+
+\subsection*{S-m-n Theorem (Parameter Theorem)}
+Let $f(x, y)$ be a computable function. There exists a computable total function $S(x)$ such that:
+$$\phi_{S(x)}(y) = f(x, y)$$
+Generally, for $f: \N^m \times \N^n \rightharpoonup \N$, there is a total computable $S: \N^m \to \N$ such that $\phi_{S(\vec{x})}^{(n)}(\vec{y}) = f(\vec{x}, \vec{y})$.
+
+\textit{Interpretation:} We can treat the first $m$ arguments as "parameters" and effectively find a program code that hard-codes these parameters.
+
+\end{document}
