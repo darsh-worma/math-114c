@@ -1,0 +1,452 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass \: \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\newcommand{\Fr}{\text{Fr}}
+\newcommand{\Char}{\text{Char}}
+
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework 3}
+\newcommand{\hmwkDueDate}{February 8, 2026}
+\newcommand{\hmwkClass}{Math 114C}
+\newcommand{\hmwkClassInstructor}{Professor Arant}
+\newcommand{\hmwkAuthorName}{\textbf{Darsh Verma}}
+\newcommand{\raw}{\rightarrow}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 11:59pm}\\
+    \vspace{0.1in}\large{\hmwkClassInstructor}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solution}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Problem 1
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{homeworkProblem}
+
+    \textbf{Claim.} For every $m, n \ge 1$, there is a recursive total $(m+1)$-ary
+    function $s^{m}_{n}(e,\vec{x})$ such that
+    \[
+        \varphi^{(m+n)}_{e}(\vec{x},\vec{y})
+        \cong
+        \varphi^{(n)}_{s^{m}_{n}(e,\vec{x})}(\vec{y})
+    \]
+    for all $\vec{x}\in\N^{m}$ and $\vec{y}\in\N^{n}$.
+
+    \begin{proof}
+    We proceed by induction on $m$.
+
+    \textbf{Base case} ($m=1$).
+    This is exactly the s-m-n theorem proved in class (with parameter $n$):
+    there exists a recursive total function $s^{1}_{n}(e,x)$ such that
+    \[
+        \varphi^{(1+n)}_{e}(x,\vec{y})
+        \cong
+        \varphi^{(n)}_{s^{1}_{n}(e,x)}(\vec{y}).
+    \]
+
+    \textbf{Inductive step.}
+    Suppose the result holds for $m$; we prove it for $m+1$.
+    Let $\vec{x}=(x_1,\dots,x_{m+1})\in\N^{m+1}$ and $\vec{y}\in\N^{n}$.
+    Write
+    \[
+        \varphi^{((m+1)+n)}_{e}(x_1,x_2,\dots,x_{m+1},\vec{y})
+        =
+        \varphi^{(1+(m+n))}_{e}(x_1,\;x_2,\dots,x_{m+1},\vec{y}).
+    \]
+    By the base case (applied with $n$ replaced by $m+n$), there is a
+    recursive total function $s^{1}_{m+n}$ such that
+    \[
+        \varphi^{(1+(m+n))}_{e}(x_1,\;x_2,\dots,x_{m+1},\vec{y})
+        \cong
+        \varphi^{(m+n)}_{s^{1}_{m+n}(e,x_1)}(x_2,\dots,x_{m+1},\vec{y}).
+    \]
+    By the inductive hypothesis (applied to the index $s^{1}_{m+n}(e,x_1)$),
+    there is a recursive total function $s^{m}_{n}$ such that
+    \[
+        \varphi^{(m+n)}_{s^{1}_{m+n}(e,x_1)}(x_2,\dots,x_{m+1},\vec{y})
+        \cong
+        \varphi^{(n)}_{s^{m}_{n}(s^{1}_{m+n}(e,x_1),\,x_2,\dots,x_{m+1})}(\vec{y}).
+    \]
+    Define
+    \[
+        s^{m+1}_{n}(e,x_1,\dots,x_{m+1})
+        \;=\;
+        s^{m}_{n}\!\bigl(s^{1}_{m+n}(e,x_1),\;x_2,\dots,x_{m+1}\bigr).
+    \]
+    This is a composition of recursive total functions, so it is recusive and
+    total.  Combining the chain of Kleene equalities gives
+    \[
+        \varphi^{((m+1)+n)}_{e}(\vec{x},\vec{y})
+        \cong
+        \varphi^{(n)}_{s^{m+1}_{n}(e,\vec{x})}(\vec{y}),
+    \]
+    completing the induction.
+    \end{proof}
+
+    \end{homeworkProblem}
+
+    \newpage
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Problem 2
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{homeworkProblem}
+
+    \textbf{Claim (Rogers' Fixed Point Theorem).}
+    If $f:\N\to\N$ is a total recursive function, then for any $n\ge 1$
+    there exists $e^{*}\in\N$ such that
+    $\varphi^{(n)}_{e^{*}} = \varphi^{(n)}_{f(e^{*})}$.
+
+    \begin{proof}
+    Let $f:\N\to\N$ be total recursive and $n\ge 1$.
+    Define a partial function $g:\subseteq\N^{n+1}\to\N$ by
+    \[
+        g(e,\vec{y}) \;=\; \varphi^{(n)}_{f(e)}(\vec{y}).
+    \]
+    Since $f$ is total recursive and the universal partial recursive function
+    $(e,\vec{y})\mapsto\varphi^{(n)}_{e}(\vec{y})$ is partial recursive,
+    the composition $g$ is partial recursive (as a fucntion of $n+1$ variables).
+
+    By Kleene's second recursion theorem, there exists $e^{*}\in\N$ such that
+    \[
+        \varphi^{(n)}_{e^{*}}(\vec{y})
+        \;\cong\;
+        g(e^{*},\vec{y})
+        \;=\;
+        \varphi^{(n)}_{f(e^{*})}(\vec{y})
+        \qquad\text{for all } \vec{y}\in\N^{n}.
+    \]
+    Therefore $\varphi^{(n)}_{e^{*}} = \varphi^{(n)}_{f(e^{*})}$.
+    \end{proof}
+
+    \end{homeworkProblem}
+
+    \newpage
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Problem 3
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{homeworkProblem}
+
+    \textbf{Claim (Kleene's Second Recursion Theorem).}
+    For every $n\ge 1$ and every partial recursive function
+    $\Phi:\subseteq\N^{n+1}\to\N$, there exists $e^{*}\in\N$ such that
+    \[
+        \varphi^{(n)}_{e^{*}}(\vec{y})
+        \;\cong\;
+        \Phi(e^{*},\vec{y})
+        \qquad\text{for all }\vec{y}\in\N^{n}.
+    \]
+
+    \begin{proof}
+    Let $\Phi:\subseteq\N^{n+1}\to\N$ be partial recursive.
+    Since $\Phi$ is partial recursive, it has an index: there exists $a\in\N$
+    with $\varphi^{(n+1)}_{a} = \Phi$, i.e.\
+    $\varphi^{(n+1)}_{a}(e,\vec{y}) \cong \Phi(e,\vec{y})$ for all
+    $e\in\N$, $\vec{y}\in\N^{n}$.
+
+    By the s-m-n theorem (with $m=1$), there is a recursive total function
+    $s:\N^{2}\to\N$ such that
+    \[
+        \varphi^{(n)}_{s(a,e)}(\vec{y})
+        \;\cong\;
+        \varphi^{(n+1)}_{a}(e,\vec{y})
+        \;=\;
+        \Phi(e,\vec{y})
+        \qquad\text{for all } e,\;\vec{y}\in\N^{n}.
+    \]
+    Define $h:\N\to\N$ by $h(e) = s(a,e)$.  Since $s$ is recursive total
+    and $a$ is a fixed constant, $h$ is a total recursive function.
+
+    By Rogers' fixed point theorem, there exists $e^{*}\in\N$ such that
+    \[
+        \varphi^{(n)}_{e^{*}} \;=\; \varphi^{(n)}_{h(e^{*})}
+        \;=\; \varphi^{(n)}_{s(a,e^{*})}.
+    \]
+    Therefore, for all $\vec{y}\in\N^{n}$,
+    \[
+        \varphi^{(n)}_{e^{*}}(\vec{y})
+        \;\cong\;
+        \varphi^{(n)}_{s(a,e^{*})}(\vec{y})
+        \;\cong\;
+        \Phi(e^{*},\vec{y}),
+    \]
+    which is exactly the conclusion of Kleene's second recurison theorem.
+    \end{proof}
+
+    \end{homeworkProblem}
+
+    \newpage
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Problem 4
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{homeworkProblem}
+
+    Let $W_e = \operatorname{dom}(\varphi^{(1)}_e)$ for every $e\in\N$.
+
+    \bigskip
+    \textbf{(a)} We show there is a recursive total function $u:\N\to\N$ with
+    $W_{u(x)} = \{y\in\N : x\mid y\}$.
+
+    \begin{proof}
+    Define $g:\N^{2}\to\N$ by
+    \[
+        g(x,y) =
+        \begin{cases}
+            0 & \text{if } x\mid y,\\
+            \uparrow & \text{if } x\nmid y,
+        \end{cases}
+    \]
+    where $\uparrow$ means ``undefined.''
+    Concretely, $g(x,y) = 0\cdot\mu z\,[\text{Div}(x,y)=0]$, where
+    $\text{Div}(x,y)$ is defined to equal $0$ if $x\mid y$ (i.e.\ if
+    $(\exists k\le y)\,[k\cdot x = y]$) and to go into an infinite search
+    otherwise.  More precisely, the relation ``$x$ divides $y$'' is primitive
+    recursive (decidable by bounded search: check whether any $k$ with
+    $0\le k\le y$ satisfies $k\cdot x = y$), so we can define
+    \[
+        g(x,y) =
+        \begin{cases}
+            0 & \text{if } (\exists k\le y)\,[k\cdot x = y],\\
+            \uparrow & \text{otherwise},
+        \end{cases}
+    \]
+    which is partial recursive.  (If $x\mid y$, the bounded search succeeds and
+    we output 0; otherwise we invoke $\mu z\,[z\ne z]$, which diverges.)
+
+    Since $g$ is partial recursive, there is an index $a$ with
+    $\varphi^{(2)}_{a}(x,y) \cong g(x,y)$.
+    By the s-m-n theorem, there is a recursive total function $u:\N\to\N$ with
+    \[
+        \varphi^{(1)}_{u(x)}(y)
+        \;\cong\;
+        \varphi^{(2)}_{a}(x,y)
+        \;=\;
+        g(x,y).
+    \]
+    Then
+    \[
+        W_{u(x)}
+        = \operatorname{dom}(\varphi^{(1)}_{u(x)})
+        = \{y\in\N : g(x,y)\!\downarrow\}
+        = \{y\in\N : x\mid y\}.  \qedhere
+    \]
+    \end{proof}
+
+    \bigskip
+    \textbf{(b)} We show there exists $e^{*}\in\N$ with
+    $W_{e^{*}} = \{y\in\N : e^{*}\mid y\}$.
+
+    \begin{proof}
+    By part (a), the function $u:\N\to\N$ is total recursive and satisfies
+    $W_{u(x)} = \{y : x\mid y\}$ for all $x$.
+    By Rogers' fixed point theorem, there exists $e^{*}\in\N$ such that
+    \[
+        \varphi^{(1)}_{e^{*}} = \varphi^{(1)}_{u(e^{*})}.
+    \]
+    Therefore
+    \[
+        W_{e^{*}}
+        = \operatorname{dom}(\varphi^{(1)}_{e^{*}})
+        = \operatorname{dom}(\varphi^{(1)}_{u(e^{*})})
+        = W_{u(e^{*})}
+        = \{y\in\N : e^{*}\mid y\}.  \qedhere
+    \]
+    \end{proof}
+
+    \end{homeworkProblem}
+
+    \newpage
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Problem 5
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{homeworkProblem}
+
+    For any $e\in\N$, let
+    $R_e = \{y\in\N : (\exists x)\;\varphi^{(1)}_e(x)\!\downarrow = y\}$
+    denote the range of $\varphi^{(1)}_e$.
+
+    \bigskip
+    \textbf{(a)} We show there is a computable total function $S:\N\to\N$ with
+    $R_{S(x)} = \{y\in\N : y\text{ is a power of }x\}$.
+
+    \begin{proof}
+    Define $f:\N^{2}\to\N$ by $f(x,k) = x^{k}$.  This is a total function,
+    and it is primitive recursive (exponentiation is primitive recursive).
+
+    Since $f$ is (total) recursive, there exists an index $a$ with
+    $\varphi^{(2)}_{a}(x,k) = f(x,k) = x^{k}$ for all $x,k$.
+    By the s-m-n theorem, there is a recursive total function $S:\N\to\N$ with
+    \[
+        \varphi^{(1)}_{S(x)}(k)
+        \;\cong\;
+        \varphi^{(2)}_{a}(x,k)
+        \;=\;
+        x^{k}
+        \qquad\text{for all } k\in\N.
+    \]
+    In particular $\varphi^{(1)}_{S(x)}$ is total and its range is
+    \[
+        R_{S(x)}
+        = \{x^{k} : k\in\N\}
+        = \{y\in\N : y\text{ is a power of }x\}.  \qedhere
+    \]
+    \end{proof}
+
+    \bigskip
+    \textbf{(b)} We show there exists $x^{*}\in\N$ with
+    $R_{x^{*}} = \{y\in\N : y\text{ is a power of }x^{*}\}$.
+
+    \begin{proof}
+    By part (a), $S:\N\to\N$ is total recursive with
+    $R_{S(x)} = \{y : y\text{ is a power of }x\}$ for all $x$.
+    By Rogers' fixed point theorem, there exists $x^{*}\in\N$ such that
+    \[
+        \varphi^{(1)}_{x^{*}} = \varphi^{(1)}_{S(x^{*})}.
+    \]
+    Therefore
+    \[
+        R_{x^{*}}
+        = \operatorname{range}(\varphi^{(1)}_{x^{*}})
+        = \operatorname{range}(\varphi^{(1)}_{S(x^{*})})
+        = R_{S(x^{*})}
+        = \{y\in\N : y\text{ is a power of }x^{*}\}.  \qedhere
+    \]
+    \end{proof}
+
+    \end{homeworkProblem}
+
+\end{document}
