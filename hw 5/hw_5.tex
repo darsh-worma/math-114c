@@ -1,0 +1,385 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass \: \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\newcommand{\Fr}{\text{Fr}}
+\newcommand{\Char}{\text{Char}}
+
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework 5}
+\newcommand{\hmwkDueDate}{March 5, 2026}
+\newcommand{\hmwkClass}{Math 114C}
+\newcommand{\hmwkClassInstructor}{Professor Arant}
+\newcommand{\hmwkAuthorName}{\textbf{Darsh Verma}}
+\newcommand{\raw}{\rightarrow}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 11:59pm}\\
+    \vspace{0.1in}\large{\hmwkClassInstructor}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solution}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Problem 1
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \section*{Problem 0}
+\textbf{Prove that $A =_{\text{df}} \{e \in \mathbb{N} : \varphi_e \text{ only diverges on input } e\}$ is not an index set.}
+
+\begin{proof}
+Let $\psi(x, y)$ be a partial computable function defined as follows:
+\[
+\psi(x, y) = 
+\begin{cases} 
+\uparrow & \text{if } y = x \\
+0 & \text{if } y \neq x 
+\end{cases}
+\]
+By the s-m-n theorem, there exists a total computable function $f: \mathbb{N} \to \mathbb{N}$ such that $\varphi_{f(x)}(y) = \psi(x, y)$ for all $x, y \in \mathbb{N}$.
+
+By the Second Recursion Theorem, there exists an index $e$ such that $\varphi_e = \varphi_{f(e)}$. 
+Thus, $\varphi_e(y) = \psi(e, y)$. This means $\varphi_e(y)$ diverges if $y = e$, and it converges (to 0) for all $y \neq e$. Therefore, $\varphi_e$ diverges \textit{only} on input $e$, which means $e \in A$.
+
+Because any computable function has infinitely many indices, there exists an index $e' \neq e$ such that $\varphi_{e'} = \varphi_e$. 
+Since $\varphi_{e'} = \varphi_e$, $\varphi_{e'}$ also diverges \textit{only} on input $e$. 
+However, for $e'$ to be in $A$, $\varphi_{e'}$ would need to diverge only on input $e'$. Since $e' \neq e$, $\varphi_{e'}$ diverges on $e$, not $e'$, and therefore $\varphi_{e'}$ does not diverge only on $e'$. Thus, $e' \notin A$.
+
+We have found two indices $e$ and $e'$ such that $\varphi_e = \varphi_{e'}$, but $e \in A$ and $e' \notin A$. Therefore, $A$ is not an index set.
+\end{proof}
+
+\hrulefill
+
+\section*{Problem 1}
+\textbf{(a) Let $f: \mathbb{N} \to \mathbb{N}$ be a recursive partial function. Show that there is a recursive total function $u: \mathbb{N} \to \mathbb{N}$ such that $W_{u(e)} = f[W_e]$ for all $e \in \mathbb{N}$.}
+
+\begin{proof}
+The set $f[W_e]$ can be characterized as $\{ y \in \mathbb{N} : \exists x (x \in W_e \land f(x) = y) \}$.
+Define a partial computable function $\psi(e, y)$ that searches for an $x$ and a step count $s$ such that $x$ is enumerated into $W_e$ within $s$ steps, and the computation of $f(x)$ halts and outputs $y$ within $s$ steps. If such an $x$ and $s$ are found, $\psi(e, y)$ halts and outputs 1.
+The domain of $\psi(e, \cdot)$ is exactly $f[W_e]$.
+By the s-m-n theorem, there is a total recursive function $u(e)$ such that $\varphi_{u(e)}(y) = \psi(e, y)$. The domain of $\varphi_{u(e)}$ is $W_{u(e)}$, so $W_{u(e)} = f[W_e]$.
+\end{proof}
+
+\textbf{(b) Prove there is a recursive total function $v: \mathbb{N}^2 \to \mathbb{N}$ such that $W_{v(z,e)} = \varphi_z[W_e]$ for all $z, e \in \mathbb{N}$.}
+
+\begin{proof}
+Define a partial computable function $\xi(z, e, y)$ that searches for an $x$ and a step count $s$ such that $x$ is enumerated into $W_e$ within $s$ steps, and $\varphi_z(x)$ halts and equals $y$ within $s$ steps. If it finds them, $\xi(z, e, y)$ halts.
+The domain of $\xi(z, e, \cdot)$ is exactly $\varphi_z[W_e]$.
+By the s-m-n theorem, there is a total recursive function $v(z, e)$ such that $\varphi_{v(z,e)}(y) = \xi(z, e, y)$. Thus, $W_{v(z,e)} = \text{dom}(\varphi_{v(z,e)}) = \varphi_z[W_e]$.
+\end{proof}
+
+\hrulefill
+
+\section*{Problem 2}
+\textbf{(a) Prove that the sequence $R_0, R_1, \dots$ contains all of the r.e. subsets of $\mathbb{N}$ and is uniformly semirecursive in the sense that $Q(e, x) \iff x \in R_e$ is semirecursive.}
+
+\begin{proof}
+First, any r.e. set is the range of some partial computable function. Thus, the sequence $\{R_e\}_{e \in \mathbb{N}}$ contains all r.e. subsets of $\mathbb{N}$.
+Second, $x \in R_e \iff \exists y (\varphi_e(y) \downarrow = x)$. This is equivalent to $\exists y \exists s (\varphi_e(y)$  halts and outputs  $x$ in $s$ steps. Because the predicate in the parentheses is recursive, $Q(e, x)$ is formed by existential quantification over a recursive predicate, which means $Q(e, x)$ is a semirecursive (r.e.) relation.
+\end{proof}
+
+\textbf{(b) Prove that there are recursive total functions $u, v: \mathbb{N} \to \mathbb{N}$ such that $R_e = W_{u(e)}$ and $W_e = R_{v(e)}$ for all $e \in \mathbb{N}$.}
+
+\begin{proof}
+\textbf{For $u$}: By part (a), the relation $x \in R_e$ is semirecursive. Define the partial computable function $\psi(e, x)$ which halts if and only if $x \in R_e$. By the s-m-n theorem, there is a total recursive function $u(e)$ such that $\varphi_{u(e)}(x) = \psi(e, x)$. Thus, $W_{u(e)} = \text{dom}(\varphi_{u(e)}) = R_e$.
+
+\textbf{For $v$}: Given an index $e$ for $W_e$, define the partial computable function $\xi(e, x)$ as follows: compute $\varphi_e(x)$. If it halts, output $x$. The range of $\xi(e, \cdot)$ is exactly the domain of $\varphi_e$, which is $W_e$. By the s-m-n theorem, there is a total recursive function $v(e)$ such that $\varphi_{v(e)}(x) = \xi(e, x)$. Therefore, $R_{v(e)} = \text{range}(\varphi_{v(e)}) = W_e$.
+\end{proof}
+
+\hrulefill
+
+\section*{Problem 3}
+\textbf{Prove that if $A$ and $B$ are disjoint co-r.e. sets, then there is a recursive set $C$ which separates them.}
+
+\begin{proof}
+Since $A$ and $B$ are co-r.e., their complements $\overline{A}$ and $\overline{B}$ are r.e.
+Since $A \cap B = \emptyset$, we have $\overline{A} \cup \overline{B} = \mathbb{N}$.
+By the reduction property for r.e. sets, for the r.e. sets $\overline{A}$ and $\overline{B}$, there exist disjoint r.e. sets $A_1 \subseteq \overline{A}$ and $B_1 \subseteq \overline{B}$ such that $A_1 \cup B_1 = \overline{A} \cup \overline{B} = \mathbb{N}$.
+Since $A_1$ and $B_1$ are disjoint, r.e., and their union is $\mathbb{N}$, they are both recursive sets.
+Let $C = B_1$. We show that $C$ separates $A$ and $B$. Since $C = B_1 \subseteq \overline{B}$, we have $C \cap B = \emptyset$. Since $A_1 \cup C = \mathbb{N}$ and $A_1 \subseteq \overline{A}$, it follows that the complement of $C$ is a subset of $\overline{A}$, which implies $A \subseteq C$.
+Thus, $A \subseteq C$ and $B \cap C = \emptyset$, so the recursive set $C$ separates $A$ and $B$.
+\end{proof}
+
+\hrulefill
+
+\section*{Problem 4}
+\textbf{Prove that $\equiv_m$ is an equivalence relation on the power set $\mathcal{P}(\mathbb{N})$.}
+
+\begin{proof}
+We must show $\equiv_m$ is reflexive, symmetric, and transitive. By definition, $A \equiv_m B \iff A \leq_m B \land B \leq_m A$.
+\begin{enumerate}
+    \item \textbf{Reflexive}: For any $A \subseteq \mathbb{N}$, let $f(x) = x$. $f$ is a total recursive function, and $x \in A \iff f(x) \in A$. Thus $A \leq_m A$, which implies $A \equiv_m A$.
+    \item \textbf{Symmetric}: If $A \equiv_m B$, then $A \leq_m B$ and $B \leq_m A$. This implies $B \leq_m A$ and $A \leq_m B$, which exactly means $B \equiv_m A$.
+    \item \textbf{Transitive}: Suppose $A \equiv_m B$ and $B \equiv_m C$. Then we have $A \leq_m B$, $B \leq_m C$, $C \leq_m B$, and $B \leq_m A$. Because $\leq_m$ is transitive, we get $A \leq_m C$ and $C \leq_m A$. Therefore, $A \equiv_m C$.
+\end{enumerate}
+Thus, $\equiv_m$ is an equivalence relation.
+\end{proof}
+
+\hrulefill
+
+\section*{Problem 5}
+\textbf{Show that $K \leq_m R$ by constructing a computable reduction.}
+
+\textbf{(a) $R(e) \iff \varphi_e$ is total and constant.}
+
+\begin{proof}
+We define a computable reduction $g$ such that $x \in K \iff g(x) \in R$.
+Let $\psi(x, y)$ be a partial compuable function defined as:
+\[
+\psi(x, y) = 
+\begin{cases} 
+0 & \text{if } \varphi_x(x) \downarrow \\
+\uparrow & \text{if } \varphi_x(x) \uparrow
+\end{cases}
+\]
+By the s-m-n theorem, there is a total computable function $g(x)$ such that $\varphi_{g(x)}(y) = \psi(x, y)$.
+If $x \in K$, $\varphi_x(x)$ halts, so $\varphi_{g(x)}(y) = 0$ for all $y$. This means $\varphi_{g(x)}$ is total and constant, so $g(x) \in R$.
+If $x \notin K$, $\varphi_x(x)$ diverges, so $\varphi_{g(x)}(y)$ diverges for all $y$. This means $\varphi_{g(x)}$ is the empty function, which is not total, so $g(x) \notin R$.
+Thus, $x \in K \iff g(x) \in R$, proving $K \leq_m R$.
+\end{proof}
+
+\textbf{(b) $Q(e) \iff \text{the range of } \varphi_e \text{ is all of } \mathbb{N}$.}
+
+\begin{proof}
+Let $\xi(x, y)$ be defined as:
+\[
+\xi(x, y) = 
+\begin{cases} 
+y & \text{if } \varphi_x(x) \downarrow \\
+\uparrow & \text{if } \varphi_x(x) \uparrow
+\end{cases}
+\]
+By the s-m-n theorem, there is a total computable function $h(x)$ such that $\varphi_{h(x)}(y) = \xi(x, y)$.
+If $x \in K$, $\varphi_x(x)$ halts, so $\varphi_{h(x)}(y) = y$ for all $y$. The range of $\varphi_{h(x)}$ is exactly $\mathbb{N}$, so $h(x) \in Q$.
+If $x \notin K$, $\varphi_x(x)$ diverges, so $\varphi_{h(x)}(y)$ diverges for all $y$. The range of $\varphi_{h(x)}$ is $\emptyset \neq \mathbb{N}$, so $h(x) \notin Q$.
+Thus, $x \in K \iff h(x) \in Q$, proving $K \leq_m Q$.
+\end{proof}
+
+\hrulefill
+
+\section*{Problem 6}
+\textbf{Prove that the following relations are not r.e.}
+
+\textbf{(a) $A =_{\text{df}} \{e \in \mathbb{N} : \varphi_e(x)\downarrow = 0 \text{ for all } x \in \mathbb{N}\}$.}
+
+\begin{proof}
+We will show that $\overline{K} \leq_m A$. Since $\overline{K}$ is not r.e., this will imply $A$ is not r.e.
+Define a partial computable function $\psi(x, y)$ that computes $\varphi_x(x)$ for up to $y$ steps. If $\varphi_x(x)$ halts within $y$ steps, $\psi(x, y)$ enters an infinite loop. Otherwise, $\psi(x, y)$ halts and outputs $0$.
+By the s-m-n theorem, there is a total computable function $f(x)$ such that $\varphi_{f(x)}(y) = \psi(x, y)$.
+If $x \notin K$, $\varphi_x(x)$ never halts. Thus, it never halts within $y$ steps for any $y$. Therefore, $\varphi_{f(x)}(y) = 0$ for all $y$, which means $f(x) \in A$.
+If $x \in K$, $\varphi_x(x)$ halts in some number of steps $s$. For any $y \geq s$, $\psi(x, y)$ will see the computation halt and will enter an infinite loop. Thus, $\varphi_{f(x)}$ is not everywhere $0$ (in fact, it diverges for $y \ge s$), so $f(x) \notin A$.
+Therefore, $x \in \overline{K} \iff f(x) \in A$, meaning $\overline{K} \leq_m A$. Thus, $A$ is not r.e.
+\end{proof}
+
+\textbf{(b) $B =_{\text{df}} \{u \in \mathbb{N} : W_{(u)_0} \subseteq W_{(u)_1}\}$.}
+
+\begin{proof}
+We again show $\overline{K} \leq_m B$.
+Define $\xi(x, y)$ as a function that runs $\varphi_x(x)$ and halts if it halts. By s-m-n, there is a total computable function $g(x)$ such that $\varphi_{g(x)}(y) = \xi(x, y)$. Thus, $W_{g(x)} = \mathbb{N}$ if $x \in K$, and $W_{g(x)} = \emptyset$ if $x \notin K$.
+Let $e_{\emptyset}$ be an index for the empty set (i.e., $W_{e_{\emptyset}} = \emptyset$).
+Define the total computable function $h(x) = \langle g(x), e_{\emptyset} \rangle$, so $(h(x))_0 = g(x)$ and $(h(x))_1 = e_{\emptyset}$.
+If $x \notin K$, $W_{(h(x))_0} = W_{g(x)} = \emptyset$. Since $W_{(h(x))_1} = \emptyset$, we have $W_{(h(x))_0} \subseteq W_{(h(x))_1}$, so $h(x) \in B$.
+If $x \in K$, $W_{(h(x))_0} = \mathbb{N}$. Snce $\mathbb{N} \not\subseteq \emptyset$, $W_{(h(x))_0} \not\subseteq W_{(h(x))_1}$, so $h(x) \notin B$.
+Thus, $x \in \overline{K} \iff h(x) \in B$. Since $\overline{K}$ is not r.e., $B$ is not r.e.
+\end{proof}
+
+\hrulefill
+
+\section*{Problem 7}
+\textbf{Let $A$ and $C$ be subsets of $\mathbb{N}$. Prove that if $C$ is creative, $A$ is r.e., and $A \cap C = \emptyset$, then $A \cup C$ is creative.}
+
+\begin{proof}
+Since $A$ and $C$ are both r.e., their union $A \cup C$ is r.e. We need to show that $\overline{A \cup C}$ is productive.
+Because $C$ is creative, $\overline{C}$ is productive, meaning there exists a total computable productive function $f$ such that for any index $x$:
+\[ W_x \subseteq \overline{C} \implies f(x) \in \overline{C} \setminus W_x \]
+We want to find a productive function $g$ for $\overline{A \cup C} = \overline{A} \cap \overline{C}$.
+Let $x$ be an index such that $W_x \subseteq \overline{A \cup C}$. This means $W_x \subseteq \overline{A}$ and $W_x \subseteq \overline{C}$.
+Since $W_x \subseteq \overline{A}$, the set $W_x \cup A$ is disjoint from $C$, which means $W_x \cup A \subseteq \overline{C}$.
+Since $W_x$ and $A$ are r.e., their union is r.e. Let $h$ be a total computable function such that $W_{h(x)} = W_x \cup A$.
+Since $W_{h(x)} \subseteq \overline{C}$, applying the productive function $f$ for $\overline{C}$ gives:
+\[ f(h(x)) \in \overline{C} \setminus W_{h(x)} \]
+Because $f(h(x)) \notin W_{h(x)} = W_x \cup A$, we have $f(h(x)) \notin W_x$ and $f(h(x)) \notin A$.
+Therefore, $f(h(x)) \in \overline{C}$ and $f(h(x)) \in \overline{A}$, so $f(h(x)) \in \overline{A} \cap \overline{C} = \overline{A \cup C}$.
+Thus, $f(h(x)) \in \overline{A \cup C} \setminus W_x$. 
+Let $g(x) = f(h(x))$. Then $g$ is a total computtable productive function for $\overline{A \cup C}$, proving that $A \cup C$ is creative.
+\end{proof}
+
+\hrulefill
+
+\section*{Problem 8}
+\textbf{Let $A$ and $B$ be disjoint subsets of $\mathbb{N}$. Prove that if $A$ is productive and $B$ is recursive, then $A \cup B$ is productive.}
+
+\begin{proof}
+Because $A$ is productive, there is a total computable function $f$ such that for any index $x$:
+\[ W_x \subseteq A \implies f(x) \in A \setminus W_x \]
+We want to construct a productive function $g$ for $A \cup B$.
+Let $x$ be an index such that $W_x \subseteq A \cup B$.
+Since $B$ is recursive, $\overline{B}$ is also recursive, and hence $W_x \cap \overline{B}$ is an r.e. set.
+Let $h$ be a total computable function such that $W_{h(x)} = W_x \setminus B = W_x \cap \overline{B}$.
+Because $W_x \subseteq A \cup B$, taking away elements in $B$ guarantees that $W_{h(x)} \subseteq A$.
+Since $W_{h(x)} \subseteq A$, we can apply the productive function $f$:
+\[ f(h(x)) \in A \setminus W_{h(x)} \]
+Since $A$ and $B$ are disjoint, $f(h(x)) \in A \implies f(h(x)) \notin B$. 
+Thus, $f(h(x)) \in (A \cup B)$.
+Furthermore, if $f(h(x))$ were in $W_x$, then since it is not in $B$, it would be in $W_x \setminus B = W_{h(x)}$, which is a contradiction since $f(h(x)) \notin W_{h(x)}$. Therefore, $f(h(x)) \notin W_x$.
+It follows that $f(h(x)) \in (A \cup B) \setminus W_x$.
+Let $g(x) = f(h(x))$. Then $g$ is a total computable productive function for $A \cup B$, so $A \cup B$ is productive.
+\end{proof}
+
+\hrulefill
+
+\section*{Problem 9}
+\textbf{Prove that if $A$ and $B$ are simple sets, then $A \oplus B =_{\text{df}} \{2x : x \in A\} \cup \{2x + 1 : x \in B\}$ is also simple.}
+
+\begin{proof}
+A set $S$ is simple if it is r.e., its complement is infinite, and it contains no infinite r.e. subset in its complement.
+\begin{enumerate}
+    \item \textbf{$A \oplus B$ is r.e.}: 
+    $y \in A \oplus B$ iff ($y$ is even and $y/2 \in A$) or ($y$ is odd and $(y-1)/2 \in B$). Since checking parity is computable and $A, B$ are r.e., $A \oplus B$ is r.e.
+    
+    \item \textbf{$\overline{A \oplus B}$ is infinite}: 
+    $\overline{A \oplus B} = \{2x : x \notin A\} \cup \{2x + 1 : x \notin B\}$. Since $A$ and $B$ are simple, their complements $\overline{A}$ and $\overline{B}$ are infinite. The doubling mappings are injective, so $\overline{A \oplus B}$ contains infinitely many even numbers and infinitely many odd numbers. Thus, it is infinite.
+    
+    \item \textbf{$\overline{A \oplus B}$ contains no infinite r.e. subset}:
+    Suppose for contradiction that there exists an infinite r.e. set $W \subseteq \overline{A \oplus B}$.
+    Let $W_{even} = \{ x : 2x \in W \}$ and $W_{odd} = \{ x : 2x + 1 \in W \}$. 
+    Because $W$ is r.e. and the division/subtraction operations are computable, $W_{even}$ and $W_{odd}$ are both r.e. sets.
+    Since $W \subseteq \overline{A \oplus B}$, we must have $W_{even} \subseteq \overline{A}$ and $W_{odd} \subseteq \overline{B}$.
+    Since $W = \{2x : x \in W_{even}\} \cup \{2x+1 : x \in W_{odd}\}$ is infinite, at least one of $W_{even}$ or $W_{odd}$ must be infinite.
+    If $W_{even}$ is infinite, then $\overline{A}$ contains an infinite r.e. subset, contradicting the simplicity of $A$.
+    If $W_{odd}$ is infinite, then $\overline{B}$ contains an infinite r.e. subset, contradicting the simplicity of $B$.
+    In both cases, we reach a contradiction. 
+    Thus, no such infinite r.e. set $W$ exists.
+\end{enumerate}
+Therefore, $A \oplus B$ is simple.
+\end{proof}
+
+\end{document}
